@@ -7,6 +7,6 @@ app.listen(3000, () => {
 });
 
 app.get('/', (req, res) => {
-    res.send('Hello Nodejs app!');
+    res.send('My API running!');
   });
   
