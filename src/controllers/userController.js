@@ -10,14 +10,14 @@ async function login(req, res) {
 
     try {
         const user = await userModel.getUserByUsernameAndPassword(username, password);
-
         if (user.length === 0) {
             res.status(401).json({ message: 'Invalid username or password' });
             return;
         }
 
-        // Authentication successful
+        // Authentication successfull
         res.json({
+            userId :user[0].USER_ID,
             message: 'Authentication successful',
             status: 'success',
             statusCode:200
@@ -28,4 +28,18 @@ async function login(req, res) {
     }
 }
 
-module.exports = { login };
+
+// Create a function to handle GET requests for user information
+async function getUser(req, res) {
+    try {
+      const userId = req.params.userid;
+      const user = await userModel.getUserById(userId);
+  
+      res.json(user);
+    } catch (err) {
+      console.error('Error getting user information:', err);
+      res.status(500).send('Error getting user information');
+    }
+  }
+
+module.exports = { login ,getUser};

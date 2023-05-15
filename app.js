@@ -7,13 +7,17 @@ require('./src/config/db');
 
 app.use(bodyParser.json());
 
+
+// api routes start from here
 app.use('/api/users', userRoutes);
 
-app.listen(3000, () => {
-  console.log('my app listening on port 3000!');
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`my app listening on port ${PORT}!`);
 });
 
 app.get('/', (req, res) => {
-    res.send('My API running!');
-  });
-   
+  res.send('My API running!');
+});
