@@ -29,10 +29,22 @@ async function getUserByUsernameAndPassword(username, password) {
 }
 
 
+async function getUsersInfo() {
+  try {
+    const spName = 'GETUSERSINFO';
+    // Execute the stored procedure and return the user information
+    const result = await pool.request()
+      .execute(spName);
+    return result.recordset;
+  } catch (err) {
+    console.error('Error getting user information:', err);
+    throw err;
+  }
+}
 // Create a function to get user information by ID
 async function getUserById(userId) {
   try {
-    const spName = 'user_testinginfo'; 
+    const spName = 'user_testinginfo';
 
     // Execute the stored procedure and return the user information
     const result = await pool.request()
@@ -46,4 +58,7 @@ async function getUserById(userId) {
   }
 }
 
-module.exports = { getUserByUsernameAndPassword, getUserByUsernameAndPassword1, getUserById };
+
+
+
+module.exports = { getUserByUsernameAndPassword, getUserByUsernameAndPassword1, getUserById, getUsersInfo };

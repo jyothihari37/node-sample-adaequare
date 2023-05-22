@@ -17,10 +17,10 @@ async function login(req, res) {
 
         // Authentication successfull
         res.json({
-            userId :user[0].USER_ID,
+            userId: user[0].USER_ID,
             message: 'Authentication successful',
             status: 'success',
-            statusCode:200
+            statusCode: 200
         });
     } catch (err) {
         console.error('Error authenticating user:', err);
@@ -32,14 +32,24 @@ async function login(req, res) {
 // Create a function to handle GET requests for user information
 async function getUser(req, res) {
     try {
-      const userId = req.params.userid;
-      const user = await userModel.getUserById(userId);
-  
-      res.json(user);
-    } catch (err) {
-      console.error('Error getting user information:', err);
-      res.status(500).send('Error getting user information');
-    }
-  }
+        const userId = req.params.userid;
+        const user = await userModel.getUserById(userId);
 
-module.exports = { login ,getUser};
+        res.json(user);
+    } catch (err) {
+        console.error('Error getting user information:', err);
+        res.status(500).send('Error getting user information');
+    }
+}
+
+
+async function getAllUsers(req, res) {
+    try {
+        const userInfo = await userModel.getUsersInfo();
+        res.json(userInfo);
+    } catch (err) {
+        console.error('Error getting user information:', err);
+        res.status(500).send('Error getting user information');
+    }
+}
+module.exports = { login, getUser, getAllUsers };
