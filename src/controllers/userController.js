@@ -10,6 +10,7 @@ async function login(req, res) {
 
     try {
         const user = await userModel.getUserByUsernameAndPassword(username, password);
+        console.log("user",user);
         if (user.length === 0) {
             res.status(401).json({ message: 'Invalid username or password' });
             return;
@@ -18,6 +19,8 @@ async function login(req, res) {
         // Authentication successfull
         res.json({
             userId: user[0].USER_ID,
+            roleId: user[0].ROLE_ID,
+            roleName: user[0].ROLENAME,
             message: 'Authentication successful',
             status: 'success',
             statusCode: 200
@@ -52,4 +55,28 @@ async function getAllUsers(req, res) {
         res.status(500).send('Error getting user information');
     }
 }
-module.exports = { login, getUser, getAllUsers };
+
+async function getEmployeesDataBasedOnLogin(req, res) {
+    try {
+        const loginUserID = req.params.loginUserID;
+        const employees = await userModel.getEmployeesDataBasedOnLogin(loginUserID);
+
+        res.json(employees);
+    } catch (err) {
+        console.error('Error getting employyes information:', err);
+        res.status(500).send('Error getting employees information');
+    }
+}
+
+async function getRolesBasedOnRoleId(req, res) {
+    try {
+        const roleId = req.params.roleid;
+        const roles = await userModel.getRoles(roleId);
+
+        res.json(roles);
+    } catch (err) {
+        console.error('Error getting roles information:', err);
+        res.status(500).send('Error getting roles information');
+    }
+}
+module.exports = { login, getUser, getAllUsers, getEmployeesDataBasedOnLogin ,getRolesBasedOnRoleId};

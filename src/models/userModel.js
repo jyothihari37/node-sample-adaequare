@@ -50,7 +50,6 @@ async function getUserById(userId) {
     const result = await pool.request()
       .input('id', sql.Int, userId)
       .execute(spName);
-
     return result.recordset[0];
   } catch (err) {
     console.error('Error getting user information:', err);
@@ -58,7 +57,39 @@ async function getUserById(userId) {
   }
 }
 
+async function getEmployeesDataBasedOnLogin(loginUserID) {
+  try {
+    const spName = 'ORGANIZATION_DATA';
+    // Execute the stored procedure and return the user information
+    const result = await pool.request()
+      .input('USERID', sql.Int, loginUserID)
+      .execute(spName);
+    return result.recordset;
+  } catch (err) {
+    console.error('Error getting employees information:', err);
+    throw err;
+  }
+}
+
+async function getRoles(roleId) {
+  try {
+    const spName = 'ROLEBASEDATA';
+
+    // Execute the stored procedure and return the user information
+    const result = await pool.request()
+      .input('ROLE_ID', sql.Int, roleId)
+      .execute(spName);
+    return result.recordset;
+  } catch (err) {
+    console.error('Error getting roles information:', err);
+    throw err;
+  }
+}
 
 
 
-module.exports = { getUserByUsernameAndPassword, getUserByUsernameAndPassword1, getUserById, getUsersInfo };
+
+module.exports = {
+  getUserByUsernameAndPassword, getUserByUsernameAndPassword1, getUserById,
+  getUsersInfo, getEmployeesDataBasedOnLogin, getRoles
+};
