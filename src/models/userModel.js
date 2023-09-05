@@ -41,6 +41,19 @@ async function getUsersInfo() {
     throw err;
   }
 }
+
+async function getCompnayList() {
+  try {
+    const spName = 'LIST_OF_ORGANIZATIONS';
+    // Execute the stored procedure and return the company information
+    const result = await pool.request()
+      .execute(spName);
+    return result.recordset;
+  } catch (err) {
+    console.error('Error getting company information:', err);
+    throw err;
+  }
+}
 // Create a function to get user information by ID
 async function getUserById(userId) {
   try {
@@ -53,6 +66,21 @@ async function getUserById(userId) {
     return result.recordset[0];
   } catch (err) {
     console.error('Error getting user information:', err);
+    throw err;
+  }
+}
+
+async function getProjectListBasedOnCompanyId(projectId) {
+  try {
+    const spName = 'GetProjects';
+
+    // Execute the stored procedure and return the user information
+    const result = await pool.request()
+      .input('SelectedCompanyid', sql.Int, projectId)
+      .execute(spName);
+    return result.recordset;
+  } catch (err) {
+    console.error('Error getting projects information:', err);
     throw err;
   }
 }
@@ -86,10 +114,38 @@ async function getRoles(roleId) {
   }
 }
 
+async function signup(data) {
+  try {
+    const spName = 'INSERT_RECORDS';
+    const result = await pool.request()
+      .input('NAME', sql.VarChar(50), data.name)
+      .input('USERNAME', sql.VarChar(50), data.userName)
+      .input('MAIL_ID', sql.VarChar(50), data.mailId)
+      .input('PASSWORD', sql.VarChar(50), data.password)
+      .input('PHN_NO', sql.BigInt, data.phoneNo)
+      .input('SelectedCompanyId', sql.Int, data.company)
+      .input('SelectedProjectID', sql.Int, data.project)
+      .execute(spName);
+
+
+    // if (result.rowsAffected && result.rowsAffected[0] > 0) {
+    //   console.log('Record inserted successfully');
+    // } else {
+    //   console.log('No record was inserted');
+    // }
+
+    console.log('Inserted UserId:', result);
+    return;
+    // return userId;
+  } catch (err) {
+    console.error('Error creating user record in the database:', err);
+    throw err;
+  }
+}
 
 
 
 module.exports = {
   getUserByUsernameAndPassword, getUserByUsernameAndPassword1, getUserById,
-  getUsersInfo, getEmployeesDataBasedOnLogin, getRoles
+  getUsersInfo, getEmployeesDataBasedOnLogin, getRoles, signup, getCompnayList, getProjectListBasedOnCompanyId
 };
